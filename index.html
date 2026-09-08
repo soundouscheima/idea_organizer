@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="appTitle" data-i18n="appName">Mulhim — Idea Organization Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app" class="app">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-rail" id="sidebarRail">
+                <button class="icon-btn" id="sidebarExpandBtn" data-i18n-title="search">
+                    <i class="fas fa-angles-right"></i>
+                </button>
+            </div>
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span data-i18n="appName">Mulhim</span>
+                </div>
+                <button id="sidebarToggle" class="sidebar-toggle" data-i18n-title="search">
+                    <i class="fas fa-angles-left"></i>
+                </button>
+            </div>
+
+            <div class="sidebar-search" id="sidebarSearch">
+                <i class="fas fa-search"></i>
+                <span><span data-i18n="searchJump">Search or jump to...</span> <kbd>Ctrl+K</kbd></span>
+            </div>
+
+            <div class="sidebar-nav">
+                <div class="nav-item active" data-view="notes">
+                    <i class="fas fa-file-alt"></i>
+                    <span data-i18n="allNotes">All Notes</span>
+                    <span class="badge" id="noteCount">0</span>
+                </div>
+                <div class="nav-item" data-view="favorites">
+                    <i class="fas fa-star"></i>
+                    <span data-i18n="favorites">Favorites</span>
+                    <span class="badge" id="favCount">0</span>
+                </div>
+                <div class="nav-item" data-view="recent">
+                    <i class="fas fa-clock"></i>
+                    <span data-i18n="recent">Recently Opened</span>
+                </div>
+                <div class="nav-item" data-view="tasks">
+                    <i class="fas fa-check-square"></i>
+                    <span data-i18n="tasks">Tasks</span>
+                </div>
+                <div class="nav-item" data-view="goals">
+                    <i class="fas fa-bullseye"></i>
+                    <span data-i18n="goals">Goals</span>
+                </div>
+                <div class="nav-item" data-view="daily">
+                    <i class="fas fa-calendar-day"></i>
+                    <span data-i18n="daily">Today's Note</span>
+                </div>
+                <div class="nav-item" data-view="templates">
+                    <i class="fas fa-copy"></i>
+                    <span data-i18n="templates">Templates</span>
+                </div>
+                <div class="nav-item" data-view="tagManager">
+                    <i class="fas fa-tags"></i>
+                    <span data-i18n="tagManager">Tag Manager</span>
+                </div>
+                <div class="nav-item" data-view="archive">
+                    <i class="fas fa-archive"></i>
+                    <span data-i18n="archive">Archive</span>
+                    <span class="badge" id="archiveCount">0</span>
+                </div>
+                <div class="nav-item" data-view="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span data-i18n="dashboard">Dashboard</span>
+                </div>
+                <div class="nav-item" data-view="stats">
+                    <i class="fas fa-chart-pie"></i>
+                    <span data-i18n="stats">Statistics</span>
+                </div>
+                <div class="nav-item" data-view="trash">
+                    <i class="fas fa-trash"></i>
+                    <span data-i18n="trash">Trash</span>
+                    <span class="badge" id="trashCount">0</span>
+                </div>
+                <div class="nav-item" data-view="calendar">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span data-i18n="calendar">Calendar</span>
+                </div>
+                <div class="nav-item" data-view="graph">
+                    <i class="fas fa-project-diagram"></i>
+                    <span data-i18n="graph">Knowledge Graph</span>
+                </div>
+            </div>
+
+            <div class="sidebar-folders" id="sidebarFolders">
+                <div class="folders-header">
+                    <span data-i18n="folders">Folders</span>
+                    <button id="addFolderBtn" class="icon-btn" data-i18n-title="createFolder">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="folder-tree" id="folderTree"></div>
+            </div>
+
+            <div class="sidebar-tags">
+                <div class="tags-header">
+                    <span data-i18n="tags">Tags</span>
+                </div>
+                <div class="tag-list" id="sidebarTagList"></div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="profile-chip" id="profileChip">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="profile-name" id="profileNameDisplay">Mulhim</span>
+                </div>
+                <button id="quickAddBtn" class="quick-add-btn" data-i18n-title="quickAdd">
+                    <i class="fas fa-plus"></i> <span data-i18n="quickAdd">Quick Add</span>
+                </button>
+                <div class="sidebar-actions">
+                    <button id="themeToggle" class="icon-btn" data-i18n-title="toggleTheme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="langToggle" class="icon-btn" data-i18n-title="language" title="Language">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <button id="settingsBtn" class="icon-btn" data-i18n-title="settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mobile Sidebar Overlay -->
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+        <!-- Main Content -->
+        <main id="mainContent" class="main-content">
+            <!-- Top Bar -->
+            <div class="topbar">
+                <button id="mobileMenuBtn" class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="topbar-breadcrumb" id="breadcrumb">
+                    <span class="breadcrumb-item" id="breadcrumbLabel" data-i18n="allNotes">All Notes</span>
+                </div>
+                <div class="topbar-search-inline" id="topbarSearchInline">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="topbarSearchInput" data-i18n-placeholder="searchJump" placeholder="Search or jump to..." autocomplete="off">
+                </div>
+                <div class="topbar-actions">
+                    <div class="view-toggle" id="viewToggle">
+                        <button class="view-btn active" data-view="grid" data-i18n-title="dashboard"><i class="fas fa-th-large"></i></button>
+                        <button class="view-btn" data-view="list" data-i18n-title="tasks"><i class="fas fa-list"></i></button>
+                    </div>
+                    <button id="sortBtn" class="icon-btn" data-i18n-title="search"><i class="fas fa-sort-amount-down"></i></button>
+                    <div class="sort-dropdown" id="sortDropdown">
+                        <div class="sort-option active" data-sort="updatedAt" data-i18n="lastModified">Last Modified</div>
+                        <div class="sort-option" data-sort="createdAt" data-i18n="creationDate">Creation Date</div>
+                        <div class="sort-option" data-sort="title" data-i18n="alphabetically">Alphabetically</div>
+                    </div>
+                    <div class="new-note-wrap">
+                        <button id="newNoteBtn" class="primary-btn" data-i18n-title="newNote">
+                            <i class="fas fa-plus"></i> <span data-i18n="newNote">New Note</span>
+                        </button>
+                        <button id="newNoteCaret" class="primary-btn caret-btn" data-i18n-title="templates">
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                        <div class="template-dropdown" id="templateDropdown" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Grid/List View -->
+            <div id="notesView" class="notes-view active">
+                <div class="notes-container" id="notesContainer">
+                    <!-- Notes will be rendered here -->
+                </div>
+                <div class="empty-state" id="emptyState" style="display:none;">
+                    <i class="fas fa-pen-fancy"></i>
+                    <h3 data-i18n="noNotes">No notes yet</h3>
+                    <p data-i18n="createFirst">Create your first note to get started</p>
+                    <button class="primary-btn" id="emptyNewNote">
+                        <i class="fas fa-plus"></i> <span data-i18n="createNote">Create Note</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Editor View -->
+            <div id="editorView" class="editor-view">
+                <div class="editor-topbar">
+                    <button id="editorBack" class="icon-btn" data-i18n-title="search">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="editor-meta">
+                        <span class="save-status" id="saveStatus">
+                            <i class="fas fa-check-circle"></i> <span data-i18n="saved">Saved</span>
+                        </span>
+                    </div>
+                    <div class="editor-actions">
+                        <button id="focusModeBtn" class="icon-btn" data-i18n-title="focusMode">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button id="noteFavoriteBtn" class="icon-btn" data-i18n-title="favorite">
+                            <i class="far fa-star"></i>
+                        </button>
+                        <button id="notePinBtn" class="icon-btn" data-i18n-title="pin">
+                            <i class="fas fa-thumbtack"></i>
+                        </button>
+                        <button id="noteFolderBtn" class="icon-btn" data-i18n-title="moveTo">
+                            <i class="fas fa-folder-open"></i>
+                        </button>
+                        <button id="noteTagsBtn" class="icon-btn" data-i18n-title="addTag">
+                            <i class="fas fa-tags"></i>
+                        </button>
+                        <button id="noteMenuBtn" class="icon-btn" data-i18n-title="settings">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="editor-note-menu" id="noteMenu" style="display:none;">
+                    <div class="note-menu-item" data-action="duplicate"><i class="fas fa-clone"></i> <span data-i18n="duplicate">Duplicate</span></div>
+                    <div class="note-menu-item" data-action="saveTemplate"><i class="fas fa-save"></i> <span data-i18n="saveTemplate">Save as Template</span></div>
+                    <div class="note-menu-item" data-action="toggleHide" data-i18n-title="hiddenNoteNote"><i class="fas fa-eye-slash"></i> <span class="nm-label" data-i18n="hidePreview">Hide Preview</span> <em style="font-style:normal;font-size:.7rem;opacity:.6;margin-left:auto;" data-i18n="visualOnly">visual only</em></div>
+                    <div class="note-menu-item" data-action="exportTxt"><i class="fas fa-file-alt"></i> <span data-i18n="exportTxt">Export as .txt</span></div>
+                    <div class="note-menu-item" data-action="exportMd"><i class="fas fa-file-code"></i> <span data-i18n="exportMd">Export as .md</span></div>
+                    <div class="note-menu-item" data-action="exportHtml"><i class="fas fa-file"></i> <span data-i18n="exportHtml">Export as .html</span></div>
+                    <div class="note-menu-item" data-action="archive"><i class="fas fa-archive"></i> <span data-i18n="archiveNote">Archive</span></div>
+                    <div class="note-menu-item" data-action="move"><i class="fas fa-arrows-alt"></i> <span data-i18n="moveNote">Move to...</span></div>
+                    <div class="note-menu-item danger" data-action="delete"><i class="fas fa-trash"></i> <span data-i18n="delete">Delete</span></div>
+                </div>
+
+                <div class="editor-content">
+                    <div class="editor-title-area">
+                        <input type="text" id="noteTitle" class="note-title-input" data-i18n-placeholder="untitled" placeholder="Untitled" autocomplete="off">
+                        <div class="note-info">
+                            <span id="noteDate"></span>
+                            <span class="separator">·</span>
+                            <span id="noteWordCount">0 words</span>
+                            <span class="separator">·</span>
+                            <span id="noteReadTime">0 min read</span>
+                        </div>
+                        <div class="note-tags" id="noteTags"></div>
+                        <div class="task-progress" id="taskProgress" style="display:none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <span id="progressText">0/0 completed</span>
+                        </div>
+                    </div>
+
+                    <!-- Block toolbar -->
+                    <div class="block-toolbar" id="blockToolbar">
+                        <button class="toolbar-btn" data-cmd="bold" title="Bold (Ctrl+B)"><i class="fas fa-bold"></i></button>
+                        <button class="toolbar-btn" data-cmd="italic" title="Italic (Ctrl+I)"><i class="fas fa-italic"></i></button>
+                        <button class="toolbar-btn" data-cmd="underline" title="Underline (Ctrl+U)"><i class="fas fa-underline"></i></button>
+                        <button class="toolbar-btn" data-cmd="strikethrough" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+                        <span class="toolbar-sep"></span>
+                        <button class="toolbar-btn" data-cmd="h1" title="Heading 1">H1</button>
+                        <button class="toolbar-btn" data-cmd="h2" title="Heading 2">H2</button>
+                        <button class="toolbar-btn" data-cmd="h3" title="Heading 3">H3</button>
+                        <span class="toolbar-sep"></span>
+                        <button class="toolbar-btn" data-cmd="ul" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+                        <button class="toolbar-btn" data-cmd="ol" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+                        <button class="toolbar-btn" data-cmd="checklist" title="Checklist"><i class="fas fa-check-square"></i></button>
+                        <span class="toolbar-sep"></span>
+                        <button class="toolbar-btn" data-cmd="quote" title="Quote"><i class="fas fa-quote-left"></i></button>
+                        <button class="toolbar-btn" data-cmd="code" title="Code Block"><i class="fas fa-code"></i></button>
+                        <button class="toolbar-btn" data-cmd="divider" title="Divider"><i class="fas fa-minus"></i></button>
+                        <button class="toolbar-btn" data-cmd="link" title="Link"><i class="fas fa-link"></i></button>
+                        <button class="toolbar-btn" data-cmd="image" title="Insert Image"><i class="fas fa-image"></i></button>
+                        <button class="toolbar-btn" data-cmd="table" title="Insert Table"><i class="fas fa-table"></i></button>
+                    </div>
+
+                    <div id="editorBody" class="editor-body" contenteditable="true" spellcheck="true" data-i18n-placeholder="startWriting" placeholder="Start writing... Use [[ to link notes"></div>
+
+                    <!-- Backlinks Section -->
+                    <div class="backlinks-section" id="backlinksSection" style="display:none;">
+                        <h4><i class="fas fa-link"></i> <span data-i18n="backlinks">Backlinks</span></h4>
+                        <div class="backlinks-list" id="backlinksList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search View -->
+            <div id="searchView" class="search-view">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" data-i18n-placeholder="searchJump" placeholder="Search notes, tags, folders..." autocomplete="off">
+                    <button id="searchClose" class="icon-btn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="search-filters">
+                    <select id="searchFilterFolder" class="filter-select">
+                        <option value="" data-i18n="allFolders">All Folders</option>
+                    </select>
+                    <select id="searchFilterTag" class="filter-select">
+                        <option value="" data-i18n="allTags">All Tags</option>
+                    </select>
+                    <select id="searchFilterDate" class="filter-select">
+                        <option value="" data-i18n="allTime">All Time</option>
+                        <option value="today" data-i18n="today">Today</option>
+                        <option value="week" data-i18n="thisWeek">This Week</option>
+                        <option value="month" data-i18n="thisMonth">This Month</option>
+                    </select>
+                </div>
+                <div class="search-results" id="searchResults">
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <p data-i18n="startTyping">Start typing to search...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard View -->
+            <div id="dashboardView" class="dashboard-view">
+                <h2 class="view-title" data-i18n="dashboard">Dashboard</h2>
+                <div class="dashboard-grid">
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="dash-value" id="dashTotalNotes">0</div>
+                        <div class="dash-label" data-i18n="totalNotes">Total Notes</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fas fa-folder"></i></div>
+                        <div class="dash-value" id="dashTotalFolders">0</div>
+                        <div class="dash-label" data-i18n="totalFolders">Total Folders</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fas fa-font"></i></div>
+                        <div class="dash-value" id="dashTotalWords">0</div>
+                        <div class="dash-label" data-i18n="totalWords">Total Words</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="dash-value" id="dashCompletedTasks">0</div>
+                        <div class="dash-label" data-i18n="completedTasks">Completed Tasks</div>
+                    </div>
+                </div>
+                <div class="dashboard-sections">
+                    <div class="dash-section">
+                        <h3 data-i18n="recentlyOpened">Recently Opened</h3>
+                        <div id="dashRecentOpened"></div>
+                    </div>
+                    <div class="dash-section">
+                        <h3 data-i18n="recentlyEdited">Recently Edited</h3>
+                        <div id="dashRecentNotes"></div>
+                    </div>
+                    <div class="dash-section">
+                        <h3 data-i18n="mostUsedTags">Most Used Tags</h3>
+                        <div id="dashTopTags"></div>
+                    </div>
+                    <div class="dash-section">
+                        <h3 data-i18n="pinnedFavorites">Pinned & Favorite</h3>
+                        <div id="dashPinnedFavs"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tag Manager View -->
+            <div id="tagManagerView" class="tag-manager-view">
+                <h2 class="view-title" data-i18n="tagManager">Tag Manager</h2>
+                <div id="tagManagerList" class="tag-manager-list"></div>
+            </div>
+
+            <!-- Tasks View -->
+            <div id="tasksView" class="tasks-view">
+                <div class="view-header">
+                    <h2 class="view-title" data-i18n="tasks">Tasks</h2>
+                    <div class="view-header-actions">
+                        <select id="tasksFilterTag" class="filter-select">
+                            <option value="" data-i18n="allTags">All Tags</option>
+                        </select>
+                        <select id="tasksFilterStatus" class="filter-select">
+                            <option value="" data-i18n="allTimeView">All</option>
+                            <option value="pending" data-i18n="pending">Pending</option>
+                            <option value="done" data-i18n="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="tasksList" class="tasks-list"></div>
+                <div class="empty-state" id="tasksEmpty" style="display:none;">
+                    <i class="fas fa-check-square"></i>
+                    <p data-i18n="noTasks">No tasks yet. Check off a checklist item in any note.</p>
+                </div>
+            </div>
+
+            <!-- Goals View -->
+            <div id="goalsView" class="goals-view">
+                <div class="view-header">
+                    <h2 class="view-title" data-i18n="goals">Goals</h2>
+                    <button id="addGoalBtn" class="primary-btn">
+                        <i class="fas fa-plus"></i> <span data-i18n="addGoal">Add Goal</span>
+                    </button>
+                </div>
+                <div id="goalsList" class="goals-list"></div>
+                <div class="empty-state" id="goalsEmpty" style="display:none;">
+                    <i class="fas fa-bullseye"></i>
+                    <p data-i18n="noGoals">No goals yet. Create a goal to track progress.</p>
+                </div>
+            </div>
+
+            <!-- Archive View -->
+            <div id="archiveView" class="archive-view">
+                <h2 class="view-title" data-i18n="archive">Archive</h2>
+                <div id="archiveList" class="archive-list"></div>
+                <div class="empty-state" id="archiveEmpty" style="display:none;">
+                    <i class="fas fa-archive"></i>
+                    <p data-i18n="noArchived">No archived notes.</p>
+                </div>
+            </div>
+
+            <!-- Recently Opened View -->
+            <div id="recentView" class="recent-view">
+                <h2 class="view-title" data-i18n="recent">Recently Opened</h2>
+                <div id="recentList" class="recent-list"></div>
+                <div class="empty-state" id="recentEmpty" style="display:none;">
+                    <i class="fas fa-clock"></i>
+                    <p data-i18n="noNotesOpened">No notes opened yet.</p>
+                </div>
+            </div>
+
+            <!-- Stats View -->
+            <div id="statsView" class="stats-view">
+                <h2 class="view-title" data-i18n="stats">Notes Statistics</h2>
+                <div class="dashboard-grid" id="statsGrid">
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="dash-value" id="statTotalNotes">0</div>
+                        <div class="dash-label" data-i18n="totalNotes">Total Notes</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fas fa-font"></i></div>
+                        <div class="dash-value" id="statTotalWords">0</div>
+                        <div class="dash-label" data-i18n="totalWords">Total Words</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="dash-value" id="statCompletedTasks">0</div>
+                        <div class="dash-label" data-i18n="completedTasks">Completed Tasks</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fas fa-link"></i></div>
+                        <div class="dash-value" id="statLinks">0</div>
+                        <div class="dash-label" data-i18n="backlinks">Backlinks</div>
+                    </div>
+                </div>
+                <div class="dashboard-sections">
+                    <div class="dash-section">
+                        <h3 data-i18n="mostUsedTags">Most Used Tags</h3>
+                        <div id="statTopTags"></div>
+                    </div>
+                    <div class="dash-section">
+                        <h3 data-i18n="recentlyEdited">Recently Edited</h3>
+                        <div id="statRecentNotes"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trash View -->
+            <div id="trashView" class="trash-view">
+                <div class="trash-header">
+                    <h2 class="view-title" data-i18n="trash">Trash</h2>
+                    <button id="emptyTrashBtn" class="danger-btn"><i class="fas fa-trash-alt"></i> <span data-i18n="emptyTrashAction">Empty Trash</span></button>
+                </div>
+                <div id="trashList" class="trash-list"></div>
+                <div class="empty-state" id="trashEmpty" style="display:none;">
+                    <i class="fas fa-trash"></i>
+                    <p data-i18n="emptyTrash">Trash is empty</p>
+                </div>
+            </div>
+
+            <!-- Templates View -->
+            <div id="templatesView" class="templates-view">
+                <h2 class="view-title" data-i18n="templates">Templates</h2>
+                <div class="templates-grid" id="templatesGrid"></div>
+                <div class="custom-templates-section">
+                    <h3 data-i18n="custom">Your Custom Templates</h3>
+                    <div id="customTemplatesList" class="templates-grid"></div>
+                </div>
+            </div>
+
+            <!-- Calendar View -->
+            <div id="calendarView" class="calendar-view">
+                <h2 class="view-title" data-i18n="calendar">Calendar</h2>
+                <div class="calendar-header">
+                    <button id="calPrev" class="icon-btn"><i class="fas fa-chevron-left"></i></button>
+                    <span id="calMonthYear" class="cal-month-year"></span>
+                    <button id="calNext" class="icon-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+                <div class="calendar-notes" id="calendarNotes">
+                    <h3 id="calSelectedDate" data-i18n="selectDay">Select a day</h3>
+                    <div id="calDayNotes"></div>
+                </div>
+            </div>
+
+            <!-- Knowledge Graph View -->
+            <div id="graphView" class="graph-view">
+                <h2 class="view-title" data-i18n="graph">Knowledge Graph</h2>
+                <canvas id="graphCanvas"></canvas>
+                <div class="graph-legend">
+                    <span><span class="legend-dot" style="background:var(--accent)"></span> <span data-i18n="notes">Notes</span></span>
+                    <span><span class="legend-dot" style="background:var(--tag-color)"></span> <span data-i18n="backlinks">Links</span></span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Search Modal (Ctrl+K) -->
+    <div id="commandPalette" class="modal-overlay" style="display:none;">
+        <div class="command-palette">
+            <div class="command-input-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="commandInput" data-i18n-placeholder="searchJump" placeholder="Type a command or search..." autocomplete="off">
+            </div>
+            <div class="command-list" id="commandList"></div>
+        </div>
+    </div>
+
+    <!-- Quick Add Modal -->
+    <div id="quickAddModal" class="modal-overlay" style="display:none;">
+        <div class="modal quick-add-modal">
+            <div class="modal-header">
+                <h3 data-i18n="quickAdd">Quick Add</h3>
+                <button class="icon-btn modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="quick-add-options">
+                    <button class="quick-add-option" data-type="note">
+                        <i class="fas fa-file-alt"></i>
+                        <span data-i18n="newNote">New Note</span>
+                    </button>
+                    <button class="quick-add-option" data-type="folder">
+                        <i class="fas fa-folder-plus"></i>
+                        <span data-i18n="createFolder">New Folder</span>
+                    </button>
+                    <button class="quick-add-option" data-type="task">
+                        <i class="fas fa-check-square"></i>
+                        <span data-i18n="newTask">New Task</span>
+                    </button>
+                </div>
+                <input type="text" id="quickAddInput" data-i18n-placeholder="enterName" placeholder="Enter name..." autocomplete="off" style="display:none;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Folder Modal -->
+    <div id="folderModal" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="folderModalTitle" data-i18n="createFolder">New Folder</h3>
+                <button class="icon-btn modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="folderNameInput" data-i18n-placeholder="folderName" placeholder="Folder name" autocomplete="off">
+                <div class="color-picker" id="folderColorPicker">
+                    <span class="color-dot" data-color="#6C5CE7" style="background:#6C5CE7"></span>
+                    <span class="color-dot" data-color="#00B894" style="background:#00B894"></span>
+                    <span class="color-dot" data-color="#E17055" style="background:#E17055"></span>
+                    <span class="color-dot" data-color="#0984E3" style="background:#0984E3"></span>
+                    <span class="color-dot" data-color="#FDCB6E" style="background:#FDCB6E"></span>
+                    <span class="color-dot" data-color="#E84393" style="background:#E84393"></span>
+                    <span class="color-dot" data-color="#636E72" style="background:#636E72"></span>
+                </div>
+                <select id="folderParentSelect">
+                    <option value="" data-i18n="root">Root</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn modal-close" data-i18n="cancel2">Cancel</button>
+                <button class="primary-btn" id="folderSaveBtn" data-i18n="save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tag Modal -->
+    <div id="tagModal" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="tagModalTitle" data-i18n="newTag">Add Tag</h3>
+                <button class="icon-btn modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="tagNameInput" data-i18n-placeholder="tagName" placeholder="Tag name" autocomplete="off">
+                <div class="color-picker" id="tagColorPicker">
+                    <span class="color-dot" data-color="#6C5CE7" style="background:#6C5CE7"></span>
+                    <span class="color-dot" data-color="#00B894" style="background:#00B894"></span>
+                    <span class="color-dot" data-color="#E17055" style="background:#E17055"></span>
+                    <span class="color-dot" data-color="#0984E3" style="background:#0984E3"></span>
+                    <span class="color-dot" data-color="#FDCB6E" style="background:#FDCB6E"></span>
+                    <span class="color-dot" data-color="#E84393" style="background:#E84393"></span>
+                    <span class="color-dot" data-color="#00CEC9" style="background:#00CEC9"></span>
+                    <span class="color-dot" data-color="#A29BFE" style="background:#A29BFE"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn modal-close" data-i18n="cancel2">Cancel</button>
+                <button class="primary-btn" id="tagSaveBtn" data-i18n="save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirmModal" class="modal-overlay" style="display:none;">
+        <div class="modal confirm-modal">
+            <div class="modal-header">
+                <h3 id="confirmTitle" data-i18n="confirm">Confirm</h3>
+                <button class="icon-btn modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn modal-close" data-i18n="cancel2">Cancel</button>
+                <button class="danger-btn" id="confirmAction" data-i18n="delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay" style="display:none;">
+        <div class="modal settings-modal">
+            <div class="modal-header">
+                <h3 data-i18n="settingsTitle">Settings</h3>
+                <button class="icon-btn modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label data-i18n="profile">Profile</label>
+                    <input type="text" id="settingProfileName" class="settings-input" data-i18n-placeholder="profileName" placeholder="Your name" autocomplete="off">
+                </div>
+                <div class="setting-group">
+                    <label data-i18n="theme">Theme</label>
+                    <select id="settingTheme">
+                        <option value="light" data-i18n="themeLight">Light</option>
+                        <option value="dark" data-i18n="themeDark">Dark</option>
+                        <option value="auto" data-i18n="themeAuto">Auto</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label data-i18n="language">Language</label>
+                    <select id="settingLang">
+                        <option value="en">English</option>
+                        <option value="ar">العربية</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label data-i18n="fontSize">Font Size</label>
+                    <select id="settingFontSize">
+                        <option value="small" data-i18n="fontSmall">Small</option>
+                        <option value="normal" data-i18n="fontNormal">Normal</option>
+                        <option value="large" data-i18n="fontLarge">Large</option>
+                        <option value="xlarge" data-i18n="fontXLarge">Extra Large</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label data-i18n="accentColor">Accent Color</label>
+                    <div class="color-picker" id="settingAccentPicker">
+                        <span class="color-dot" data-color="#6C5CE7" style="background:#6C5CE7"></span>
+                        <span class="color-dot" data-color="#00B894" style="background:#00B894"></span>
+                        <span class="color-dot" data-color="#0984E3" style="background:#0984E3"></span>
+                        <span class="color-dot" data-color="#E84393" style="background:#E84393"></span>
+                        <span class="color-dot" data-color="#E17055" style="background:#E17055"></span>
+                        <span class="color-dot" data-color="#00CEC9" style="background:#00CEC9"></span>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <label data-i18n="trashRetention">Trash Auto-Delete</label>
+                    <select id="settingTrashDays">
+                        <option value="7" data-i18n="days7">7 days</option>
+                        <option value="14" data-i18n="days14">14 days</option>
+                        <option value="30" data-i18n="days30">30 days</option>
+                        <option value="0" data-i18n="never">Never</option>
+                    </select>
+                </div>
+                <hr>
+                <div class="setting-group">
+                    <label data-i18n="dataManagement">Data Management</label>
+                    <div class="setting-actions">
+                        <button class="secondary-btn" id="exportAllBtn"><i class="fas fa-download"></i> <span data-i18n="exportBackup">Export Backup</span></button>
+                        <button class="secondary-btn" id="importAllBtn"><i class="fas fa-upload"></i> <span data-i18n="importBackup">Import Backup</span></button>
+                        <input type="file" id="importFileInput" accept=".json" style="display:none;">
+                        <button class="danger-btn" id="clearAllBtn"><i class="fas fa-trash"></i> <span data-i18n="clearAllData">Clear All Data</span></button>
+                    </div>
+                    <p style="font-size:.8rem;color:var(--text-tertiary);margin-top:10px;" data-i18n="aboutApp">All data is stored privately in your browser.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Focus Mode -->
+    <div id="focusMode" class="focus-mode" style="display:none;">
+        <div class="focus-topbar">
+            <button id="focusExit" class="icon-btn focus-exit-btn" title="Exit Focus Mode (Esc)">
+                <i class="fas fa-compress"></i>
+            </button>
+            <button id="focusDarkToggle" class="icon-btn" title="Toggle Dark Background">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+        <div class="focus-content">
+            <input type="text" id="focusTitle" class="focus-title" data-i18n-placeholder="untitled" placeholder="Untitled" autocomplete="off">
+            <div id="focusBody" class="focus-body" contenteditable="true" spellcheck="true" data-i18n-placeholder="startWriting2" placeholder="Start writing..."></div>
+        </div>
+        <div class="focus-pomodoro" id="focusPomodoro">
+            <div class="pomodoro-btn" id="pomodoroToggle">
+                <i class="fas fa-clock"></i>
+                <span id="pomodoroTimer">25:00</span>
+            </div>
+            <div class="pomodoro-controls" id="pomodoroControls" style="display:none;">
+                <button id="pomodoroStart" class="icon-btn"><i class="fas fa-play"></i></button>
+                <button id="pomodoroReset" class="icon-btn"><i class="fas fa-redo"></i></button>
+                <select id="pomodoroDuration">
+                    <option value="25">25 min</option>
+                    <option value="15">15 min</option>
+                    <option value="10">10 min</option>
+                    <option value="5">5 min</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Hidden file input for image upload -->
+    <input type="file" id="imageUploadInput" accept="image/*" style="display:none;">
+
+    <script src="storage.js"></script>
+    <script src="app-core.js"></script>
+    <script src="app-features.js"></script>
+    <script src="app-pages.js"></script>
+    <script src="app-wiring.js"></script>
+</body>
+</html>
