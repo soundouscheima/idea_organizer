@@ -1,0 +1,1 @@
+Notion Simple Web Organizer is a lightweight, all-in-one workspace designed to help you organize your ideas, goals, to-do lists, and habits without needing a backend server. Built with a clean, minimalist user interface, it provides a distraction-free experience to help you stay focused and work more efficiently.
